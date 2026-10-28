@@ -24,6 +24,7 @@ export default function Dashboard() {
    const [applications, setApplications] = useState([]);
    const [loading, setLoading] = useState(true);
    const [filter, setFilter] = useState("All");
+   const [search, setSearch] = useState("");
 
    const load = async () => {
       try {
@@ -53,7 +54,12 @@ export default function Dashboard() {
 
    const statuses = ["All", "Wishlist", "Applied", "HR Review", "Interview", "Offer", "Accepted", "Rejected", "Withdrawn"];
 
-   const filtered = filter === "All" ? applications : applications.filter((a) => a.status === filter);
+   const filtered = applications.filter((a) => {
+      const matchesStatus = filter === "All" || a.status === filter;
+      const matchesSearch =
+         !search || a.company_name.toLowerCase().includes(search.toLowerCase()) || a.position.toLowerCase().includes(search.toLowerCase());
+      return matchesStatus && matchesSearch;
+   });
 
    return (
       <div className="min-h-screen bg-slate-50">
@@ -101,6 +107,17 @@ export default function Dashboard() {
                           <p className={`text-3xl font-bold mt-1 ${s.color}`}>{s.value}</p>
                        </div>
                     ))}
+            </div>
+
+            {/* Search bar */}
+            <div className="mb-4">
+               <input
+                  type="text"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Search by company or position..."
+                  className="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+               />
             </div>
 
             {/* Filter tabs */}
