@@ -81,6 +81,12 @@ export default function Dashboard() {
                   <Link to="/add" className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl transition-colors">
                      + Add Application
                   </Link>
+                  <Link
+                     to="/profile"
+                     className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 text-sm font-semibold rounded-xl transition-colors"
+                  >
+                     Profile
+                  </Link>
                   <button
                      onClick={handleLogout}
                      className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 text-sm font-semibold rounded-xl transition-colors"

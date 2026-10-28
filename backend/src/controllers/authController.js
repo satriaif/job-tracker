@@ -93,3 +93,56 @@ export const login = async (req, res) => {
       res.status(500).json({ message: "Server error" });
    }
 };
+
+export const updateProfile = async (req, res) => {
+   const { name } = req.body;
+   const userId = req.user.id;
+
+   if (!name || !name.trim()) {
+      return res.status(400).json({ message: "Name is required" });
+   }
+
+   try {
+      const result = await pool.query("UPDATE users SET name = $1 WHERE id = $2 RETURNING id, name, email", [name.trim(), userId]);
+
+      res.json({
+         message: "Profile updated successfully",
+         user: result.rows[0],
+      });
+   } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Server error" });
+   }
+};
+
+export const changePassword = async (req, res) => {
+   const { currentPassword, newPassword } = req.body;
+   const userId = req.user.id;
+
+   if (!currentPassword || !newPassword) {
+      return res.status(400).json({ message: "Current and new password are required" });
+   }
+
+   if (newPassword.length < 6) {
+      return res.status(400).json({ message: "New password must be at least 6 characters" });
+   }
+
+   try {
+      const result = await pool.query("SELECT password FROM users WHERE id = $1", [userId]);
+
+      const validPassword = await bcrypt.compare(currentPassword, result.rows[0].password);
+
+      if (!validPassword) {
+         return res.status(400).json({ message: "Current password is incorrect" });
+      }
+
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+      await pool.query("UPDATE users SET password = $1 WHERE id = $2", [hashedPassword, userId]);
+
+      res.json({ message: "Password changed successfully" });
+   } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Server error" });
+   }
+};
