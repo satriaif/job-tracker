@@ -7,6 +7,7 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import AddApplication from "./pages/AddApplication";
 import EditApplication from "./pages/EditApplication";
+import Profile from "./pages/Profile";
 
 export default function App() {
    return (
@@ -63,6 +64,14 @@ export default function App() {
             element={
                <ProtectedRoute>
                   <Analytics />
+               </ProtectedRoute>
+            }
+         />
+         <Route
+            path="/profile"
+            element={
+               <ProtectedRoute>
+                  <Profile />
                </ProtectedRoute>
             }
          />
