@@ -38,8 +38,8 @@ export default function EditApplication() {
                contract_type: data.contract_type || "",
                salary: data.salary || "",
                status: data.status || "Wishlist",
-               date_applied: data.date_applied ? new Date(data.date_applied).toISOString().split("T")[0] : "",
-               close_date: data.close_date ? new Date(data.close_date).toISOString().split("T")[0] : "",
+               date_applied: data.date_applied ? new Date(data.date_applied).toLocaleDateString("en-CA", { timeZone: "Asia/Jakarta" }) : "",
+               close_date: data.close_date ? new Date(data.close_date).toLocaleDateString("en-CA", { timeZone: "Asia/Jakarta" }) : "",
                job_source: data.job_source || "",
                notes: data.notes || "",
             });
