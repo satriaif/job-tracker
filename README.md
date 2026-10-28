@@ -1,6 +1,6 @@
 # Job Tracker
 
-A full-stack web application to track job applications — record where you applied, monitor application status, and get warned about upcoming deadlines.
+A web application to track job applications — record where you applied, monitor application status, and get warned about upcoming deadlines.
 
 Built as a learning project to understand modern fullstack development practices including REST API design, JWT authentication, and React frontend architecture.
 
