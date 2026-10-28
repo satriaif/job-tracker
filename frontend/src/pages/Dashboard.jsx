@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getApplicationsApi, deleteApplicationApi } from "../api/applications";
 import { useAuth } from "../context/AuthContext";
+import SkeletonCard from "../components/SkeletonCard";
+import SkeletonSummary from "../components/SkeletonSummary";
 
 const STATUS_COLORS = {
    Wishlist: "bg-slate-100 text-slate-600",
@@ -78,17 +80,19 @@ export default function Dashboard() {
          <main className="max-w-5xl mx-auto px-4 py-8">
             {/* Summary cards */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-               {[
-                  { label: "Total", value: applications.length, color: "text-slate-700" },
-                  { label: "Applied", value: applications.filter((a) => a.status === "Applied").length, color: "text-blue-600" },
-                  { label: "Interview", value: applications.filter((a) => a.status === "Interview").length, color: "text-purple-600" },
-                  { label: "Offer", value: applications.filter((a) => a.status === "Offer").length, color: "text-green-600" },
-               ].map((s) => (
-                  <div key={s.label} className="bg-white rounded-2xl border border-slate-200 p-4">
-                     <p className="text-xs text-slate-400">{s.label}</p>
-                     <p className={`text-3xl font-bold mt-1 ${s.color}`}>{s.value}</p>
-                  </div>
-               ))}
+               {loading
+                  ? [...Array(4)].map((_, i) => <SkeletonSummary key={i} />)
+                  : [
+                       { label: "Total", value: applications.length, color: "text-slate-700" },
+                       { label: "Applied", value: applications.filter((a) => a.status === "Applied").length, color: "text-blue-600" },
+                       { label: "Interview", value: applications.filter((a) => a.status === "Interview").length, color: "text-purple-600" },
+                       { label: "Offer", value: applications.filter((a) => a.status === "Offer").length, color: "text-green-600" },
+                    ].map((s) => (
+                       <div key={s.label} className="bg-white rounded-2xl border border-slate-200 p-4">
+                          <p className="text-xs text-slate-400">{s.label}</p>
+                          <p className={`text-3xl font-bold mt-1 ${s.color}`}>{s.value}</p>
+                       </div>
+                    ))}
             </div>
 
             {/* Filter tabs */}
@@ -109,7 +113,11 @@ export default function Dashboard() {
 
             {/* Applications list */}
             {loading ? (
-               <p className="text-center text-slate-400 py-20">Loading...</p>
+               <div className="space-y-3">
+                  {[...Array(4)].map((_, i) => (
+                     <SkeletonCard key={i} />
+                  ))}
+               </div>
             ) : filtered.length === 0 ? (
                <div className="text-center py-20">
                   <p className="text-slate-400 text-lg">No applications yet</p>

@@ -2,6 +2,7 @@ import axiosInstance from "./axiosInstance.js";
 
 export const getApplicationsApi = async () => {
    const response = await axiosInstance.get("/applications");
+   // await new Promise((r) => setTimeout(r, 700)); // temporary delay
    return response.data;
 };
 
