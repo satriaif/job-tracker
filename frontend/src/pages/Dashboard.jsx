@@ -4,6 +4,7 @@ import { getApplicationsApi, deleteApplicationApi } from "../api/applications";
 import { useAuth } from "../context/AuthContext";
 import SkeletonCard from "../components/SkeletonCard";
 import SkeletonSummary from "../components/SkeletonSummary";
+import { getCloseDateStatus } from "../utils/dateHelpers";
 
 const STATUS_COLORS = {
    Wishlist: "bg-slate-100 text-slate-600",
@@ -128,41 +129,79 @@ export default function Dashboard() {
                </div>
             ) : (
                <div className="space-y-3">
-                  {filtered.map((app) => (
-                     <div key={app.id} className="bg-white border border-slate-200 rounded-2xl p-5 hover:border-slate-300 transition-colors">
-                        <div className="flex items-start justify-between gap-4">
-                           <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-2 flex-wrap mb-1">
-                                 <h3 className="font-semibold text-slate-800">{app.position}</h3>
-                                 <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${STATUS_COLORS[app.status]}`}>{app.status}</span>
+                  {filtered.map((app) => {
+                     const closeDateStatus = getCloseDateStatus(app.close_date);
+
+                     return (
+                        <div
+                           key={app.id}
+                           className={`bg-white border rounded-2xl p-5 hover:border-slate-300 transition-colors
+                ${
+                   closeDateStatus?.type === "expired"
+                      ? "border-red-300 bg-red-50"
+                      : closeDateStatus?.type === "urgent"
+                        ? "border-orange-300 bg-orange-50"
+                        : "border-slate-200"
+                }`}
+                        >
+                           <div className="flex items-start justify-between gap-4">
+                              <div className="flex-1 min-w-0">
+                                 <div className="flex items-center gap-2 flex-wrap mb-1">
+                                    <h3 className="font-semibold text-slate-800">{app.position}</h3>
+                                    <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${STATUS_COLORS[app.status]}`}>{app.status}</span>
+                                    {closeDateStatus && (
+                                       <span
+                                          className={`text-xs px-2 py-0.5 rounded-full font-medium
+                                ${closeDateStatus.type === "expired" ? "bg-red-100 text-red-600" : "bg-orange-100 text-orange-600"}`}
+                                       >
+                                          {closeDateStatus.type === "expired" ? "🚨" : "⚠️"} {closeDateStatus.label}
+                                       </span>
+                                    )}
+                                 </div>
+                                 <p className="text-slate-500 text-sm">{app.company_name}</p>
+                                 <div className="flex flex-wrap gap-3 mt-2 text-xs text-slate-400">
+                                    {app.location && <span>📍 {app.location}</span>}
+                                    {app.contract_type && <span>💼 {app.contract_type}</span>}
+                                    {app.salary && <span>💰 {app.salary}</span>}
+                                    {app.date_applied && (
+                                       <span>📅 {new Date(app.date_applied).toLocaleDateString("id-ID", { timeZone: "Asia/Jakarta" })}</span>
+                                    )}
+
+                                    {app.close_date && (
+                                       <span
+                                          className={
+                                             closeDateStatus?.type === "expired"
+                                                ? "text-red-500 font-medium"
+                                                : closeDateStatus?.type === "urgent"
+                                                  ? "text-orange-500 font-medium"
+                                                  : ""
+                                          }
+                                       >
+                                          ⏰ Closes: {new Date(app.close_date).toLocaleDateString("id-ID", { timeZone: "Asia/Jakarta" })}
+                                       </span>
+                                    )}
+                                    {app.job_source && <span>🔗 {app.job_source}</span>}
+                                 </div>
+                                 {app.notes && <p className="text-xs text-slate-400 mt-2 italic">{app.notes}</p>}
                               </div>
-                              <p className="text-slate-500 text-sm">{app.company_name}</p>
-                              <div className="flex flex-wrap gap-3 mt-2 text-xs text-slate-400">
-                                 {app.location && <span>📍 {app.location}</span>}
-                                 {app.contract_type && <span>💼 {app.contract_type}</span>}
-                                 {app.salary && <span>💰 {app.salary}</span>}
-                                 {app.date_applied && <span>📅 {new Date(app.date_applied).toLocaleDateString()}</span>}
-                                 {app.job_source && <span>🔗 {app.job_source}</span>}
+                              <div className="flex gap-2 shrink-0">
+                                 <button
+                                    onClick={() => navigate(`/edit/${app.id}`)}
+                                    className="px-3 py-1.5 text-xs font-medium bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg transition-colors"
+                                 >
+                                    Edit
+                                 </button>
+                                 <button
+                                    onClick={() => handleDelete(app.id)}
+                                    className="px-3 py-1.5 text-xs font-medium bg-red-50 hover:bg-red-100 text-red-500 rounded-lg transition-colors"
+                                 >
+                                    Delete
+                                 </button>
                               </div>
-                              {app.notes && <p className="text-xs text-slate-400 mt-2 italic">{app.notes}</p>}
-                           </div>
-                           <div className="flex gap-2 shrink-0">
-                              <button
-                                 onClick={() => navigate(`/edit/${app.id}`)}
-                                 className="px-3 py-1.5 text-xs font-medium bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg transition-colors"
-                              >
-                                 Edit
-                              </button>
-                              <button
-                                 onClick={() => handleDelete(app.id)}
-                                 className="px-3 py-1.5 text-xs font-medium bg-red-50 hover:bg-red-100 text-red-500 rounded-lg transition-colors"
-                              >
-                                 Delete
-                              </button>
                            </div>
                         </div>
-                     </div>
-                  ))}
+                     );
+                  })}
                </div>
             )}
          </main>
