@@ -5,6 +5,7 @@ import { useAuth } from "../context/AuthContext";
 import SkeletonCard from "../components/SkeletonCard";
 import SkeletonSummary from "../components/SkeletonSummary";
 import { getCloseDateStatus } from "../utils/dateHelpers";
+import { exportToCsv } from "../utils/exportCsv";
 
 const STATUS_COLORS = {
    Wishlist: "bg-slate-100 text-slate-600",
@@ -87,6 +88,12 @@ export default function Dashboard() {
                   >
                      Profile
                   </Link>
+                  <button
+                     onClick={() => exportToCsv(applications)}
+                     className="px-4 py-2 bg-green-100 hover:bg-green-200 text-green-600 text-sm font-semibold rounded-xl transition-colors"
+                  >
+                     ⬇ Export
+                  </button>
                   <button
                      onClick={handleLogout}
                      className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 text-sm font-semibold rounded-xl transition-colors"
