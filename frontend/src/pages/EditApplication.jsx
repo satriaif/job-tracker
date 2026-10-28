@@ -61,6 +61,19 @@ export default function EditApplication() {
       setError("");
       setLoading(true);
 
+      // Frontend validation
+      if (!form.company_name.trim() || !form.position.trim()) {
+         setError("Company name and position are required");
+         setLoading(false);
+         return;
+      }
+
+      if (form.salary && isNaN(form.salary)) {
+         setError("Salary must be a number");
+         setLoading(false);
+         return;
+      }
+
       try {
          await updateApplicationApi(id, form);
          navigate("/dashboard");
