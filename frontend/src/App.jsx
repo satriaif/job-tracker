@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
 import GuestRoute from "./components/GuestRoute";
 import Login from "./pages/Login";
+import Analytics from "./pages/Analytics";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import AddApplication from "./pages/AddApplication";
@@ -53,6 +54,15 @@ export default function App() {
             element={
                <ProtectedRoute>
                   <EditApplication />
+               </ProtectedRoute>
+            }
+         />
+
+         <Route
+            path="/analytics"
+            element={
+               <ProtectedRoute>
+                  <Analytics />
                </ProtectedRoute>
             }
          />

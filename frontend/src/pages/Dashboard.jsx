@@ -65,6 +65,13 @@ export default function Dashboard() {
                   <p className="text-xs text-slate-400">Welcome, {user?.name}</p>
                </div>
                <div className="flex items-center gap-3">
+                  <Link
+                     to="/analytics"
+                     className="px-4 py-2 bg-purple-100 hover:bg-purple-200 text-purple-600 text-sm font-semibold rounded-xl transition-colors"
+                  >
+                     📊 Analytics
+                  </Link>
+
                   <Link to="/add" className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl transition-colors">
                      + Add Application
                   </Link>
